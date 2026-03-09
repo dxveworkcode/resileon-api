@@ -41,6 +41,18 @@ class Settings(BaseSettings):
     # Must remain ≥ 1 to prevent tactical information leakage.
     data_delay_hours: int = 1
 
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_db_url(cls, v: str) -> str:
+        # Render (and most PaaS) provide postgres:// or postgresql://.
+        # SQLAlchemy's async engine requires the +asyncpg driver suffix.
+        if isinstance(v, str):
+            if v.startswith("postgres://"):
+                v = "postgresql+asyncpg://" + v[len("postgres://"):]
+            elif v.startswith("postgresql://"):
+                v = "postgresql+asyncpg://" + v[len("postgresql://"):]
+        return v
+
     @field_validator("data_delay_hours")
     @classmethod
     def enforce_minimum_delay(cls, v: int) -> int:
