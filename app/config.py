@@ -31,7 +31,10 @@ class Settings(BaseSettings):
     rate_limit_free: str = "50/day"
     rate_limit_pro: str = "10000/day"
     rate_limit_default: str = "200/minute"
-
+    # ── RapidAPI ───────────────────────────────────────────────────────────────
+    # Set this to the proxy secret from RapidAPI dashboard → Security.
+    # Leave blank during local dev — check is skipped when empty.
+    rapidapi_proxy_secret: str = ""
     # ── CORS ───────────────────────────────────────────────────────────────────
     # Plain string: "*" for all origins, or comma-separated list of URLs.
     allowed_origins: str = "*"

@@ -117,6 +117,21 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
+# ─── RapidAPI Proxy Secret ───────────────────────────────────────────────────
+# Rejects any request that didn't come through RapidAPI's proxy.
+# Skipped automatically when RAPIDAPI_PROXY_SECRET is not configured (local dev).
+
+_BYPASS_PATHS = {"/docs", "/redoc", "/openapi.json", "/favicon.ico", "/"}
+
+@app.middleware("http")
+async def verify_rapidapi_proxy(request: Request, call_next):
+    secret = settings.rapidapi_proxy_secret
+    if secret and request.url.path not in _BYPASS_PATHS:
+        if request.headers.get("X-RapidAPI-Proxy-Secret") != secret:
+            return JSONResponse(status_code=403, content={"error": "forbidden", "message": "Access via RapidAPI only."})
+    return await call_next(request)
+
+
 # ─── Rate Limiting ────────────────────────────────────────────────────────────
 
 app.state.limiter = limiter
