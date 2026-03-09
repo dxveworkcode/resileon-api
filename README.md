@@ -1,4 +1,7 @@
 # Resileon API
+<p align="center">
+  <img src="docs/banner.png" alt="Resileon API" width="100%">
+</p>
 
 <p>
   <a href="#endpoints">Endpoints</a> &nbsp;·&nbsp;
