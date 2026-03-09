@@ -1,0 +1,68 @@
+services:
+  # ── FastAPI server ────────────────────────────────────────────────────────────
+  api:
+    build: .
+    container_name: resileon_api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://resileon:resileon_pass@db:5432/resileon
+      DATABASE_URL_SYNC: postgresql://resileon:resileon_pass@db:5432/resileon
+      REDIS_URL: redis://redis:6379
+      CACHE_TTL: "3600"
+      DEBUG: "false"
+      ALLOWED_ORIGINS: '["http://localhost:3000","https://yourdomain.com"]'
+      DATA_DELAY_HOURS: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Background data worker ────────────────────────────────────────────────────
+  worker:
+    build: .
+    container_name: resileon_worker
+    command: python -m worker.scheduler
+    environment:
+      DATABASE_URL: postgresql+asyncpg://resileon:resileon_pass@db:5432/resileon
+      DATABASE_URL_SYNC: postgresql://resileon:resileon_pass@db:5432/resileon
+      REDIS_URL: redis://redis:6379
+      DATA_DELAY_HOURS: "1"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: resileon_db
+    environment:
+      POSTGRES_USER: resileon
+      POSTGRES_PASSWORD: resileon_pass
+      POSTGRES_DB: resileon
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resileon -d resileon"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Redis ─────────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: resileon_redis
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

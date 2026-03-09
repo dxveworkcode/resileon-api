@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables (NEVER commit real secrets)
+.env
+
+# SQLite development database
+*.db
+*.db-shm
+*.db-wal
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Static uploads / local assets (banner, favicon go in docs/ and static/ but not secrets)
+static/favicon.ico
+docs/banner.png
+
+# Render / Railway deploy artifacts
+.render-buildpacks.json
+
+# Python type checking cache
+.mypy_cache/
+.ruff_cache/
