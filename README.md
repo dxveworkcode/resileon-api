@@ -173,7 +173,7 @@ Port, border crossing, airport, and road status derived from live news signals.
 |------|---------|
 | `404` | Zone not found, or endpoint does not exist |
 | `429` | Rate limit hit. Check the `Retry-After` response header. |
-| `500` | Server error. Contact api@resileon.io |
+| `500` | Server error. Contact dxveworkcode@gmail.com |
 
 ---
 

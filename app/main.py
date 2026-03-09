@@ -109,7 +109,7 @@ app = FastAPI(
         "| Pro  | 10,000 | $15-$30/month |\n\n"
         "Obtain API keys via [RapidAPI](https://rapidapi.com)."
     ),
-    contact={"name": "Resileon API Support", "email": "api@resileon.io"},
+    contact={"name": "Resileon API Support", "email": "dxveworkcode@gmail.com"},
     license_info={"name": "Proprietary"},
     lifespan=lifespan,
     docs_url="/docs",
@@ -178,7 +178,7 @@ async def internal_error_handler(request: Request, exc: Exception) -> JSONRespon
         content={
             "error": "internal_server_error",
             "message": "An unexpected error occurred. Please try again later.",
-            "support": "api@resileon.io",
+            "support": "dxveworkcode@gmail.com",
         },
     )
 
