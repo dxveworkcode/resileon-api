@@ -1,8 +1,6 @@
-<p align="center">
-  <img src="docs/banner.png" alt="Resileon API" width="100%">
-</p>
+# Resileon API
 
-<p align="center">
+<p>
   <a href="#endpoints">Endpoints</a> &nbsp;·&nbsp;
   <a href="#running-locally">Quick Start</a> &nbsp;·&nbsp;
   <a href="#deployment">Deploy</a> &nbsp;·&nbsp;

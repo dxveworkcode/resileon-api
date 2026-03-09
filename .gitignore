@@ -41,10 +41,6 @@ Thumbs.db
 *.log
 logs/
 
-# Static uploads / local assets (banner, favicon go in docs/ and static/ but not secrets)
-static/favicon.ico
-docs/banner.png
-
 # Render / Railway deploy artifacts
 .render-buildpacks.json
 
