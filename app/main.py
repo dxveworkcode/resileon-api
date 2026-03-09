@@ -8,6 +8,8 @@ import logging
 from contextlib import asynccontextmanager
 from pathlib import Path
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -36,10 +38,50 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Resileon API starting — initialising database tables...")
+    logger.info("Resileon API starting — initialising database...")
     await init_db()
-    logger.info("Database ready.")
+
+    # Seed zones and run an immediate scrape, then schedule every 30 min.
+    # Running inside the API process avoids the need for a separate worker service.
+    from worker.seed_data import seed_zones
+    from worker.scraper import update_commodities
+    from worker.news_parser import update_logistics
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+    from app.database import engine
+
+    logging.getLogger("yfinance").setLevel(logging.CRITICAL)
+
+    SessionLocal = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+    async def _scrape_cycle():
+        async with SessionLocal() as db:
+            await seed_zones(db)
+            commodity_count = await update_commodities(db)
+            logistics_count = await update_logistics(db)
+        logger.info(f"Scrape complete: {commodity_count} commodity records, {logistics_count} logistics updates.")
+        try:
+            from app.routers.status import set_last_scrape_time
+            from datetime import datetime, timezone
+            set_last_scrape_time(datetime.now(timezone.utc))
+        except Exception:
+            pass
+
+    await _scrape_cycle()
+
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(
+        _scrape_cycle,
+        trigger=IntervalTrigger(minutes=30),
+        id="scrape",
+        name="Resileon data scrape",
+        replace_existing=True,
+    )
+    scheduler.start()
+    logger.info("Scheduler started — scraping every 30 minutes.")
+
     yield
+
+    scheduler.shutdown(wait=False)
     logger.info("Resileon API shutting down.")
 
 
