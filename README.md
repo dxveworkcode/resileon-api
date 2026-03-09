@@ -164,7 +164,7 @@ Port, border crossing, airport, and road status derived from live news signals.
 {
   "error": "rate_limit_exceeded",
   "message": "You have exceeded the allowed request rate for this endpoint.",
-  "detail": "Limit: 50/day",
+  "detail": "Limit: 50/month",
   "upgrade_url": "https://rapidapi.com/resileon/api/resileon-api"
 }
 ```
@@ -192,11 +192,11 @@ This constraint is enforced at the application level and cannot be bypassed thro
 
 Access via [RapidAPI](https://rapidapi.com/resileon/api/resileon-api).
 
-| Tier | Requests/day | Price |
-|------|--------------|-------|
-| Free | 50 | Free |
-| Pro | 10,000 | $15-$30/month |
-| Enterprise | Unlimited | Contact us |
+| Tier | Requests/month | Price |
+|------|----------------|-------|
+| Basic | 50 | Free |
+| Pro | 2,500 | $25/month |
+| Ultra | 10,000 | $75/month |
 
 ---
 
