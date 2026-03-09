@@ -127,8 +127,10 @@ app.add_middleware(SlowAPIMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=False,   # No cookies / sessions — API-key only
+    allow_origins=[
+        o.strip() for o in settings.allowed_origins.split(",")
+    ],
+    allow_credentials=False,   # No cookies / sessions -- API-key only
     allow_methods=["GET"],     # Read-only public API
     allow_headers=["*"],
 )

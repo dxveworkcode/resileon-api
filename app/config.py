@@ -33,10 +33,8 @@ class Settings(BaseSettings):
     rate_limit_default: str = "200/minute"
 
     # ── CORS ───────────────────────────────────────────────────────────────────
-    allowed_origins: list[str] = [
-        "http://localhost:3000",
-        "http://localhost:8080",
-    ]
+    # Plain string: "*" for all origins, or comma-separated list of URLs.
+    allowed_origins: str = "*"
 
     # ── Data Safety ────────────────────────────────────────────────────────────
     # Minimum hours to hold collected data before it is served via the API.
