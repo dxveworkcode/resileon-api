@@ -17,7 +17,7 @@ Resileon surfaces economic data from conflict-affected regions. It tracks commod
 **Logistics signals:** Port closures · Border blockages · Road disruptions · Airspace status  
 **Regions:** Eastern Europe · Middle East · Sub-Saharan Africa
 
-**Get access:** [RapidAPI](https://rapidapi.com/resileon/api/resileon-api)
+**Get access:** [RapidAPI](https://rapidapi.com/dxveworkcode/api/resileon)
 
 ---
 
